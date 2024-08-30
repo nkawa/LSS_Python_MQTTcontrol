@@ -18,7 +18,7 @@ lss.initBus(CST_LSS_Port, CST_LSS_Baud)
 class LSS_MQTT:
     def on_connect(self,client, userdata, flag, rc):
         print("Connected with result code " + str(rc))  # 接続できた旨表示
-        self.client.subscribe("kinova/state") #　connected -> subscribe
+        self.client.subscribe("lss4dof/state") #　connected -> subscribe
 
 # ブローカーが切断したときの処理
     def on_disconnect(self,client, userdata, rc):
@@ -29,19 +29,14 @@ class LSS_MQTT:
 #        print("Message",msg.payload)
         js = json.loads(msg.payload)
 #        print("rot:",js)
-        
-        print("rot:",js['rotate'])
-        rot = js['rotate']
-        j1 = int(float(rot['j1'])*10)
-        j2 = int(float(rot['j2'])*10)
-        j3 = int(float(rot['j3'])*10)
-        j4 = int(float(rot['j4'])*10)
-        j5 = int(float(rot['j5'])*10)
+        rot = [int(float(x)*10)  for x in js['rotate']]        
+        print("rot:",rot)
 
-        lss.LSS(1).move(0);
-        lss.LSS(2).move(j2);
-        lss.LSS(3).move(-900+j3);
-        lss.LSS(4).move(0+j5);
+        lss.LSS(1).move(-rot[0]);
+        lss.LSS(2).move(rot[1]);
+        lss.LSS(3).move(rot[2]-900);
+        lss.LSS(4).move(rot[3]);
+        lss.LSS(5).move(-rot[4]);
         
 
     def connect_mqtt(self):
