@@ -2,13 +2,17 @@
 import json
 from paho.mqtt import client as mqtt
 import sys
+import os
 from datetime import datetime
 
 # Import LSS library
 from vendor import lss 
 from vendor import lss_const as lssc
 
-CST_LSS_Port = "COM10"				# For windows platforms
+
+
+
+CST_LSS_Port = os.environ.get("LSS_COM","COM10")				# For windows platforms
 CST_LSS_Baud = lssc.LSS_DefaultBaud
 
 # Create and open a serial port
