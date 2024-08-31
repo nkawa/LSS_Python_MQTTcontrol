@@ -11,7 +11,8 @@
 ### List of constants
 
 # Bus communication
-LSS_DefaultBaud = 115200
+#LSS_DefaultBaud = 115200
+LSS_DefaultBaud = 921600
 LSS_MaxTotalCommandLength = (30 + 1)	# ex: #999XXXX-2147483648\r Adding 1 for end string char (\0)
 #										# ex: #999XX000000000000000000\r
 LSS_Timeout = 100						# in ms
