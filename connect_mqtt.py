@@ -39,6 +39,8 @@ class LSS_MQTT:
         js = json.loads(msg.payload)
         if js['abutton']== True:
              self.start = 0
+        else:
+             print("waiting..")
         if self.start < 0:
              return
         self.start +=1
@@ -60,7 +62,7 @@ class LSS_MQTT:
         set_joints = real_joints.copy()
         set_joints[0] = -set_joints[0]
         set_joints[2] = set_joints[2]+900 
-        set_joints[5] = -set_joints[5]
+        set_joints[4] = -set_joints[4]
         real_rot = [x/10 for x in set_joints]
         
         self.client.publish("lss4dof/real",json.dumps({"rotate":real_rot}))
