@@ -41,10 +41,10 @@ mq.connect_mqtt()
 while True:
     real_joints = []
     for i in range(1,6):
-        real_joints.append(lss.LSS(i).getPosition())
+        real_joints.append(int(lss.LSS(i).getPosition()))
     real_joints[0] = -real_joints[0]
     real_joints[2] = real_joints[2]+900 
-    real_joints[5] = -real_joints[5]
+    real_joints[4] = -real_joints[4]
     real_rot = [x/10 for x in real_joints]
     print("Rot:",real_rot)
 

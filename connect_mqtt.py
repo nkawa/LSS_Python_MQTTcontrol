@@ -40,7 +40,8 @@ class LSS_MQTT:
         if js['abutton']== True:
              self.start = 0
         else:
-             print("waiting..")
+             print("Waiting...")
+
         if self.start < 0:
              return
         self.start +=1
@@ -56,35 +57,34 @@ class LSS_MQTT:
         # 生で送っちゃだめ！
         # まず、現在の値を所得
         real_joints = []
-        for i in range(1,6):
-            real_joints.append(lss.LSS(i).getPosition())
+#        for i in range(1,6):
+#            real_joints.append(int(lss.LSS(i).getPosition()))
 
-        set_joints = real_joints.copy()
-        set_joints[0] = -set_joints[0]
-        set_joints[2] = set_joints[2]+900 
-        set_joints[4] = -set_joints[4]
-        real_rot = [x/10 for x in set_joints]
+#        set_joints = real_joints.copy()
+#        set_joints[0] = -int(set_joints[0])
+#        set_joints[2] = set_joints[2]+900 
+#        set_joints[4] = -set_joints[4]
         
-        self.client.publish("lss4dof/real",json.dumps({"rotate":real_rot}))
+#        self.client.publish("lss4dof/real",json.dumps({"rotate":real_joints}))
         
-        if abs(real_joints[0]+rot[0])>10:
-                lss.LSS(1).move(-rot[0])
-        if abs(real_joints[1]-rot[1])>10:
-                lss.LSS(2).move(rot[1])
-        if abs(real_joints[2]-rot[2]+900)>10:
-                lss.LSS(3).move(rot[2]-900)
-        if abs(real_joints[3]-rot[3])>10:
-                lss.LSS(4).move(rot[3])
-        if abs(real_joints[4]+rot[4])>10:
-                lss.LSS(5).move(-rot[4])
+#        if abs(real_joints[0]+rot[0])>10:
+#                lss.LSS(1).move(-rot[0])
+#        if abs(real_joints[1]-rot[1])>10:
+#                lss.LSS(2).move(rot[1])
+#        if abs(real_joints[2]-rot[2]+900)>10:
+#                lss.LSS(3).move(rot[2]-900)
+#        if abs(real_joints[3]-rot[3])>10:
+#                lss.LSS(4).move(rot[3])
+#        if abs(real_joints[4]+rot[4])>10:
+#                lss.LSS(5).move(-rot[4])
 # 時刻
         ctime = datetime.now().strftime("%Y/%m/%d %H:%M:%S.%f")
-        self.log.write(json.dumps({"time":ctime, "recv":rot, "real":real_rot})+"\n")
-#        lss.LSS(1).move(-rot[0]);
-#        lss.LSS(2).move(rot[1]);
-#        lss.LSS(3).move(rot[2]-900);
-#        lss.LSS(4).move(rot[3]);
-#        lss.LSS(5).move(-rot[4]);
+#        self.log.write(json.dumps({"time":ctime, "recv":rot, "real":real_joints})+"\n")
+        lss.LSS(1).move(-rot[0]);
+        lss.LSS(2).move(rot[1]);
+        lss.LSS(3).move(rot[2]-900);
+        lss.LSS(4).move(rot[3]);
+        lss.LSS(5).move(-rot[4]);
         
 
     def connect_mqtt(self):
@@ -101,7 +101,7 @@ class LSS_MQTT:
 
 fname = sys.argv[1]
 if fname == "":
-    fname = "lss4dof.log"
+    fname = "lss4dof2.log"
 mq = LSS_MQTT(fname)
 
 mq.connect_mqtt()
