@@ -38,14 +38,23 @@ class LSS_MQTT:
 mq = LSS_MQTT()
 mq.connect_mqtt()
 
-while True:
-    real_joints = []
-    for i in range(1,6):
-        real_joints.append(int(lss.LSS(i).getPosition()))
-    real_joints[0] = -real_joints[0]
-    real_joints[2] = real_joints[2]+900 
-    real_joints[4] = -real_joints[4]
-    real_rot = [x/10 for x in real_joints]
-    print("Rot:",real_rot)
+logger = open("MonitorLSS.txt","w")
 
-    mq.client.publish("lss4dof/real",json.dumps({"rotate":real_rot}))
+try:
+    while True:
+        real_joints = []
+        for i in range(1,6):
+            real_joints.append(int(lss.LSS(i).getPosition()))
+        real_joints[0] = -real_joints[0]
+        real_joints[2] = real_joints[2]+900 
+        real_joints[4] = -real_joints[4]
+        real_rot = [x/10 for x in real_joints]
+        print("Rot:",real_rot)
+        ctime = datetime.now().strftime("%Y/%m/%d %H:%M:%S.%f")
+        logger.write(json.dumps({"time":ctime,"real":real_rot})+"\n")
+
+        mq.client.publish("lss4dof/real",json.dumps({"rotate":real_rot}))
+except KeyboardInterrupt:
+    logger.close()
+    sys.exit(0)
+
